@@ -1,26 +1,28 @@
 // A concurrent prime sieve
-//并发通过筛选法求素数
 package main
 
+import "fmt"
+
+// The prime sieve: Daisy-chain FilterPrime processes.
 func main() {
-	sieveDemo()
+	primeSieveDemo()
 }
-func sieveDemo() {
+func primeSieveDemo() {
 	ch := make(chan int)
 	// Create a new channel.
-	go Generate(ch)
-	// Launch Generate goroutine.
+	go GeneratePrime(ch)
+	// Launch GeneratePrime goroutine.
 	for i := 0; i < 10; i++ {
 		prime := <-ch
-		print(prime, "\n")
+		fmt.Println(prime)
 		ch1 := make(chan int)
-		go Filter(ch, ch1, prime)
+		go FilterPrime(ch, ch1, prime)
 		ch = ch1
 	}
 }
 
 // Send the sequence 2, 3, 4, ... to channel 'ch'.
-func Generate(ch chan<- int) {
+func GeneratePrime(ch chan<- int) {
 	for i := 2; ; i++ {
 		ch <- i // Send 'i' to channel 'ch'.
 	}
@@ -28,7 +30,7 @@ func Generate(ch chan<- int) {
 
 // Copy the values from channel 'in' to channel 'out',
 // removing those divisible by 'prime'.
-func Filter(in <-chan int, out chan<- int, prime int) {
+func FilterPrime(in <-chan int, out chan<- int, prime int) {
 	for {
 		i := <-in // Receive value from 'in'.
 		if i%prime != 0 {
