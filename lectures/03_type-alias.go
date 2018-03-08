@@ -6,7 +6,7 @@ import (
 )
 
 type (
-	byte int8
+	byteAlias int8
 	rune int32
 	文本   string
 )
@@ -19,8 +19,8 @@ func main() {
 	var ii uint8 = 255
 	fmt.Printf("ii:%d\n", ii)
 
-	//	.\03_type-alias.go:18:16: constant 255 overflows byte
-	var bb byte = 127
+	//	.\03_type-alias.go:18:16: constant 255 overflows byteAlias
+	var bb byteAlias = 127
 	fmt.Printf("bb:%d\n", bb)
 
 	var aaa float32 = 1.1

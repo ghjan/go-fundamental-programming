@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"time"
 )
 
@@ -11,7 +12,12 @@ func main() {
 	//fmt.Println("----timerDemo---------")
 	//timerDemo()
 	fmt.Println("----pingpongDemo---------")
-	pingpongDemo()
+	pingpongDemo(2)
+	fmt.Println("----pingpong3Demo---------")
+	pingpongDemo(3)
+	fmt.Println("----pingpong100Demo---------")
+	pingpongDemo(100)
+
 }
 func timerDemo() {
 	for i := 0; i < 8; i++ {
@@ -42,17 +48,19 @@ func timer(d time.Duration) <-chan int {
 	return c
 }
 
-func pingpongDemo() {
+func pingpongDemo(count int) {
 	var Ball int
 	table := make(chan int)
-	go player(table)
-	go player(table)
-	go player(table)
+	up := int(math.Max(2, float64(count)))
+	for i := 0; i < up; i++ {
+		go player(table)
+	}
 
 	table <- Ball
 	time.Sleep(1 * time.Second)
 	<-table
 }
+
 func player(table chan int) {
 	for {
 		ball := <-table
